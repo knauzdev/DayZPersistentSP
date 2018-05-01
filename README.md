@@ -7,7 +7,7 @@ This is the updated, cleaner version of this mod: https://www.reddit.com/r/dayz/
 Everything related to saving characters has now been moved to the init.c file (instead of the independant scripts folder).
 It is now a lot cleaner to read and no need for thousands of lines of code in the scritps folder that the Mission script module dependend on.
 
-This should bring a much cleaner, more stable, future-proof build. There is also less work involved with switching to Multiplayer if there is a stress_test happening. (you don't need to do anything)
+This should bring a much cleaner, more stable, future-proof build. There is also less work involved with switching to Multiplayer if there is an online stress test happening. (after removing "scripts" folder, you don't need to do anything)
 
 # Installation instructions:
 
