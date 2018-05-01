@@ -50,4 +50,4 @@ You heard correct, beards are in this build! As of right now it takes 30 minutes
 
 **Light blue screen when starting the game:** Run the "resetsave.bat" file from the download.
 
-**Script or compile errors:** Remove "init.c" and perform a Steam intengrity check on your game. (DayZ->Properties->Local files->Verify local game cache). Might have to click it twice to get the right tool. (Do not trust the custom "DayZ cleanup tool", make sure you run the actual Steam verifier).
+**Script or compile errors:** Remove "init.c" and perform a Steam intengrity check on your game. (DayZ->Properties->Local files->Verify local game cache). Might have to click it twice to get the right tool. (Do not trust the custom "DayZ cleanup tool", make sure you run the actual Steam verifier). Then follow the install instructions again.
