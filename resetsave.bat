@@ -1,0 +1,1 @@
+del %LOCALAPPDATA%\DayZ\player.txt
