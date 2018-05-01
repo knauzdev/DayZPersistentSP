@@ -29,16 +29,16 @@ void main()
 void init() {
   g_Game.SetMissionState( DayZGame.MISSION_STATE_GAME );
   lifespanp = new CustomPluginLifespan();
-  startHive();
   spawnPlayer();
+  startHive();
   setWeatherLimits();
-
+  g_Game.m_loadingScreenOn = false;
   inited = true;
 }
 
 //main mission loop
 void update() {
-  int sleeptime = 100;
+  int sleeptime = 200;
   int keydelay = 500; //ms between keypresses, default half a second.
   int savedelay = 2000; //ms between saves, default 2 seconds.
   while(true) {
