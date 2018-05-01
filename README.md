@@ -15,7 +15,7 @@ This should bring a much cleaner, more stable, future-proof build. There is also
 
 2. **[IF YOU HAVE ANY OLDER VERSION OF MY MOD, FROM REDDIT]** Delete the "scripts" folder in your DayZ folder entirely. There is no need for it anymore. **I repeat, there should be no folder called "scripts" in your DayZ installation folder. At all.**
 
-3. Place the "init.c" and "CustomLifestateOverride.c" files inside "[DayZ install folder]/Missions/dayzOffline.ChernarusPlus/". Overwrite init.c.
+3. Place the "init.c" and "CustomLifespanOverride.c" files inside "[DayZ install folder]/Missions/dayzOffline.ChernarusPlus/". Overwrite init.c.
 
 4. Run DayZ from Steam with the "Play DayZ Offline" option.
 
