@@ -15,7 +15,7 @@ This should bring a much cleaner, more stable, future-proof build. There is also
 
 2. **[IF YOU HAVE ANY OLDER VERSION OF MY MOD, FROM REDDIT]** Delete the "scripts" folder in your DayZ folder entirely. There is no need for it anymore. **I repeat, there should be no folder called "scripts" in your DayZ installation folder. At all.**
 
-3. Place the "init.c" and "CustomLifespanOverride.c" files inside "[DayZ install folder]/Missions/dayzOffline.ChernarusPlus/". Overwrite init.c.
+3. Place the "init.c" and "CustomLifeSpanOverride.c" files inside "[DayZ install folder]/Missions/dayzOffline.ChernarusPlus/". Overwrite init.c.
 
 4. Run DayZ from Steam with the "Play DayZ Offline" option.
 
@@ -37,10 +37,17 @@ In the init.c file there are a few variables you change:
 
 You heard correct, beards are in this build! As of right now it takes 30 minutes for half beardness, 60 minutes for a full beard.
 
-*Known issues:
+# Known issues:
 
 1. Some ambient sounds dissappear after restarting mission. Restart the game completely to fix.
 
 2. Some items may spawn in the wrong slot. (Or on the ground, always check the ground below you when you spawn in)
 
 3. Magazine ammo counters and item quantities do not save. They will always be set to max when spawning in.
+
+
+# Troubleshooting:
+
+**Light blue screen when starting the game:** Run the "resetsave.bat" file from the download.
+
+**Script or compile errors:** Remove "init.c" and perform a Steam intengrity check on your game. (DayZ->Properties->Local files->Verify local game cache). Might have to click it twice to get the right tool. (Do not trust the custom "DayZ cleanup tool", make sure you run the actual Steam verifier).
