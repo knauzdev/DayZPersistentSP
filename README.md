@@ -27,7 +27,7 @@ SHIFT+P: Deletes save file and respawn. (automatically reloads the mission).
 
 # Settings:
 
-In the init.c file there are a few variables you change:
+In the init.c file there are a few variables you can customize:
 
 **extendedLoadout:** if this is set to *true* you will spawn with the default offline mode gear. (IZH, Makarov, knife etc.). If this is set to *false* you will spawn with a hoodie, pants and 4 rags. 
 
