@@ -18,7 +18,7 @@ ref Camera oCamera;
 //MOD SETTINGS
 string playersave = "$profile:\\player.txt";
 bool extendedLoadout = false;
-bool hacksOn = true;
+bool hacksOn = false;
 int sleeptime = 100;
 
 int keybindtimeout = 0;
