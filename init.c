@@ -50,7 +50,7 @@ void init() {
 void update() {
   int keydelay = 250; //ms between keypresses, default half a second.
   int savedelay = 2000; //ms between saves, default 2 seconds.
-  while(true) {
+  while(g_Game.GetMissionState() == DayZGame.MISSION_STATE_GAME) {
     if(oPlayer) {
       int life_state = oPlayer.GetPlayerState();
       if (life_state != EPlayerStates.DEAD) {
