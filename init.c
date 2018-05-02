@@ -6,17 +6,26 @@ ref TStringArray tops = {"Hoodie_Blue","Hoodie_Black","Hoodie_Brown","Hoodie_Gre
 ref TStringArray pants = {"Jeans_Black","Jeans_BlueDark","Jeans_Blue","Jeans_Brown","Jeans_Green","Jeans_Grey","CanvasPants_Beige","CanvasPants_Blue","CanvasPants_Grey"};
 ref TStringArray shoes = {"AthleticShoes_Black","AthleticShoes_Blue","AthleticShoes_Brown","AthleticShoes_Green","AthleticShoes_Grey"};
 
+//ref OfflineMission mission;
+
 bool inited = false;
 
 ref CustomPluginLifespan lifespanp;
 ref PlayerBase oPlayer;
+ref Camera oCamera;
 
+
+//MOD SETTINGS
 string playersave = "$profile:\\player.txt";
-
 bool extendedLoadout = false;
+bool hacksOn = true;
+int sleeptime = 100;
 
 int keybindtimeout = 0;
 int savetimeout = 0;
+
+//global hack variables, don't change these. Turn on hacks with hacksOn variable.
+bool hackGodmode = false;
 
 void main()
 {
@@ -28,6 +37,7 @@ void main()
 
 void init() {
   g_Game.SetMissionState( DayZGame.MISSION_STATE_GAME );
+  SetDispatcher(new DispatcherCaller);
   lifespanp = new CustomPluginLifespan();
   spawnPlayer();
   startHive();
@@ -38,8 +48,7 @@ void init() {
 
 //main mission loop
 void update() {
-  int sleeptime = 200;
-  int keydelay = 500; //ms between keypresses, default half a second.
+  int keydelay = 250; //ms between keypresses, default half a second.
   int savedelay = 2000; //ms between saves, default 2 seconds.
   while(true) {
     if(oPlayer) {
@@ -67,6 +76,12 @@ void update() {
   if(savetimeout <= savedelay) {
     savetimeout+=sleeptime;
   }
+  if(hacksOn) {
+    updateHacks();
+  }
+  if ( g_Game.GetUIManager().GetMenu() == NULL ) {
+    LockControls(false);
+  }
   Sleep(sleeptime);
   }
 }
@@ -79,18 +94,131 @@ void handleInput() {
       keybindtimeout = 0;
     }
   }
-  if(KeyState(KeyCode.KC_B) && KeyState(KeyCode.KC_LSHIFT)) {
-    ItemBase handitem = oPlayer.GetHumanInventory().GetEntityInHands();
-    string handitemtype = handitem.GetType();
-    handitemtype.ToLower();
-    if(handitemtype.IndexOf("knife") != -1) {
-      oPlayer.ShavePlayer();
-      oPlayer.MessageStatus("Nothing better than a clean shave!");
+  if(KeyState(KeyCode.KC_B) ) {
+    if(KeyState(KeyCode.KC_LSHIFT)) {
+      ItemBase handitem = oPlayer.GetHumanInventory().GetEntityInHands();
+      string handitemtype = handitem.GetType();
+      handitemtype.ToLower();
+      if(handitemtype.IndexOf("knife") != -1 || hacksOn) {
+        oPlayer.ShavePlayer();
+        oPlayer.MessageStatus("Nothing better than a clean shave!");
+      }
+      else {
+        oPlayer.MessageStatus("I need to have a knife in my hands to shave!");
+      }
     }
-    else {
-      oPlayer.MessageStatus("I need to have a knife in my hands to shave!");
+    else if (KeyState(KeyCode.KC_LMENU) && hacksOn) { //grow beard hack if ALT+B is pressed.
+      oPlayer.StatUpdate("playtime", oPlayer.StatGet("playtime") + 1850);
     }
     keybindtimeout = 0;
+  }
+  //hacks input
+  if(hacksOn) {
+    if(KeyState(KeyCode.KC_END)) { //godmode toggle
+      if(hackGodmode) {
+        hackGodmode = false;
+        oPlayer.MessageStatus("Godmode & infinite ammo disabled.")
+      } else {
+        hackGodmode = true;
+        oPlayer.MessageStatus("Godmode & infinite ammo enabled.")
+      }
+      keybindtimeout = 0;
+    }
+    if(KeyState(KeyCode.KC_DELETE)) { //Open admin menu
+      if ( g_Game.GetUIManager().GetMenu() == NULL ) {
+        PluginSceneManager editor = PluginSceneManager.Cast(g_Game.GetUIManager().EnterScriptedMenu(MENU_SCENE_EDITOR, NULL));
+        editor.InitLoad();
+        LockControls(true);
+      }
+      else if ( g_Game.GetUIManager().IsMenuOpen(MENU_SCENE_EDITOR) ) {
+        g_Game.GetUIManager().Back();
+        LockControls(false);
+      }
+      keybindtimeout = 0;
+    }
+    if(KeyState(KeyCode.KC_T)) {
+      vector hitPos = GetCursorPos();
+      teleport(hitPos);
+      keybindtimeout = 0;
+    }
+    if(KeyState(KeyCode.KC_INSERT)) {
+      toggleFreeCamera();
+      keybindtimeout = 0;
+    }
+    if(KeyState(KeyCode.KC_R)) {
+      refillGun();
+      keybindtimeout = 0;
+    }
+    if(KeyState(KeyCode.KC_O)) {
+      if(KeyState(KeyCode.KC_LSHIFT)) {
+        GetGame().CreateObject( "Animal_CanisLupus_Grey", GetCursorPos(), false, true );
+      }
+      else if(KeyState(KeyCode.KC_LCONTROL)) {
+        GetGame().CreateObject( GetRandomChildFromBaseClass( "cfgVehicles", "AnimalBase" ), GetCursorPos(), false, true );
+      }
+      else
+      {
+        GetGame().CreateObject( GetRandomChildFromBaseClass( "cfgVehicles", "DayZInfected" ), GetCursorPos(), false, true );
+      }
+      keybindtimeout = 0;
+    }
+
+  }
+}
+
+void updateHacks() {
+  if(hackGodmode) {
+    //health and blood update
+    oPlayer.SetHealth( oPlayer.GetMaxHealth( "", "" ) );
+    oPlayer.SetHealth( "","Blood", oPlayer.GetMaxHealth( "", "Blood" ) );
+    refillGun();
+  }
+}
+
+void refillGun() {
+  //infinite ammo update
+  EntityAI oWeapon = oPlayer.GetHumanInventory().GetEntityInHands();
+  if( oWeapon )
+  {
+    Magazine oMag = ( Magazine ) oWeapon.GetAttachmentByConfigTypeName( "DefaultMagazine" );
+
+    if( oMag && oMag.IsMagazine()) {
+      oMag.LocalSetAmmoMax();
+    }
+    Object oSupressor = ( Object ) oWeapon.GetAttachmentByConfigTypeName( "SuppressorBase" );
+    if( oSupressor ) {
+      oSupressor.SetHealth( oSupressor.GetMaxHealth( "", "" ) );
+    }
+  }
+}
+
+void teleport(vector pos) {
+  float distance = vector.Distance( oPlayer.GetPosition(), pos );
+  if ( distance < 5000 ) {
+    EntityAI oVehicle = oPlayer.GetDrivingVehicle();
+    if( oVehicle ) {
+      oPlayer.MessageStatus("Get out of the vehicle first!");
+    }
+    else {
+      oPlayer.SetPosition( pos );
+    }
+  }
+  else {
+    oPlayer.MessageStatus( "Distance for teleportation is too far!" );
+  }
+}
+
+void toggleFreeCamera() {
+  if ( oCamera ) {
+    GetGame().SelectPlayer( NULL, oPlayer );
+    oCamera.SetActive( false );
+    GetGame().ObjectDelete( oCamera );
+    oCamera = NULL;
+  }
+  else {
+    GetGame().SelectPlayer( NULL, NULL );
+    oCamera = g_Game.CreateObject( "FreeDebugCamera", oPlayer.GetPosition(), true );
+    oCamera.SetActive( true );
   }
 }
 
@@ -143,9 +271,6 @@ void spawnPlayerFromFile() {
     FGets(file, inHands);
     FGets(file, modelType);
   }
-  //FGets(file,  line);
-
-
 
   string shealth, sblood, stemp, senergy, swater;
   FGets(file, shealth); FGets(file, sblood); FGets(file, stemp); FGets(file, senergy); FGets(file, swater);
@@ -372,8 +497,59 @@ void savePlayerToFile() {
   savetimeout = 0;
 }
 
-void SetRandomHealth(EntityAI itm)
-{
+//HELPER FUNCTIONS
+
+void SetRandomHealth(EntityAI itm) {
 	int rndHlt = Math.RandomInt(40,100);
 	itm.SetHealth("","",rndHlt);
+}
+
+vector GetCursorPos() {
+  vector rayStart = GetGame().GetCurrentCameraPosition();
+  vector rayEnd = rayStart + GetGame().GetCurrentCameraDirection() * 10000;
+  vector hitPos;
+  vector hitNormal;
+  int hitComponentIndex;
+  DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, NULL, NULL, oPlayer);
+
+  return hitPos;
+}
+
+string GetRandomChildFromBaseClass( string strConfigName, string strBaseClass ) {
+  string child_name = "";
+  int count = GetGame().ConfigGetChildrenCount (strConfigName);
+  array<string> class_names = new array<string>;
+
+  for (int p = 0; p < count; p++) {
+    GetGame().ConfigGetChildName ( strConfigName, p, child_name );
+
+    if ( GetGame().IsKindOf(child_name, strBaseClass ) ) {
+      class_names.Insert(child_name);
+    }
+  }
+  return class_names.GetRandomElement()
+}
+
+void LockControls(bool state) {
+  if (state == true) {
+    GetGame().GetInput().ChangeGameFocus(1, INPUT_DEVICE_MOUSE);
+    GetGame().GetInput().ChangeGameFocus(1, INPUT_DEVICE_KEYBOARD);
+    GetGame().GetInput().ChangeGameFocus(1, INPUT_DEVICE_GAMEPAD);
+
+    if (GetGame().GetUIManager()) 	GetGame().GetUIManager().ShowUICursor(true);
+  }
+  else {
+    GetGame().GetInput().ChangeGameFocus(-1, INPUT_DEVICE_MOUSE);
+    GetGame().GetInput().ChangeGameFocus(-1, INPUT_DEVICE_KEYBOARD);
+    GetGame().GetInput().ChangeGameFocus(-1, INPUT_DEVICE_GAMEPAD);
+
+    if (GetGame().GetUIManager()) {
+      if (GetGame().GetUIManager().GetMenu()) {
+        GetGame().GetUIManager().ShowUICursor(true);
+      }
+      else {
+        GetGame().GetUIManager().ShowUICursor(false);
+      }
+    }
+  }
 }
