@@ -25,6 +25,24 @@ This should bring a much cleaner, more stable, future-proof build. There is also
 
 **SHIFT+P:** Deletes save file and respawn. (automatically reloads the mission).
 
+**[Below keybinds only work if you have hacksOn set to true, see Settings below]**
+
+**ALT+B:** Grow your beard.
+
+**T:** Teleport to cursor.
+
+**END:** Godmode and infinite ammo.
+
+**O:** Spawn zombie.
+
+**SHIFT+O:** Spawn wolf.
+
+**SHIFT+O:** Spawn animal.
+
+**INSERT:** Free camera.
+
+**DELETE:** Open editor menu. Not fully working yet. (spawning items is broken).
+
 # Settings:
 
 In the init.c file there are a few variables you can customize:
@@ -32,6 +50,8 @@ In the init.c file there are a few variables you can customize:
 **extendedLoadout:** if this is set to *true* you will spawn with the default offline mode gear. (IZH, Makarov, knife etc.). If this is set to *false* you will spawn with a hoodie, pants and 4 rags. 
 
 **sleepdelay:** Time (in ms) between mission updates. This might be a good idea to set to a higher value if you are having FPS problems.
+
+**hacksOn:** Turn on hacks. See keybinds.
 
 # Beards:
 
@@ -45,9 +65,15 @@ You heard correct, beards are in this build! As of right now it takes 30 minutes
 
 3. Magazine ammo counters and item quantities do not save. They will always be set to max when spawning in.
 
+4. Admin menu not working completely. If you want to use it stick to the old version of this mod or use Arkensor's offline mod.
+
 
 # Troubleshooting:
 
 **Light blue screen when starting the game:** Run the "resetsave.bat" file from the download.
 
 **Script or compile errors:** Remove "init.c" and perform a Steam intengrity check on your game. (DayZ->Properties->Local files->Verify local game cache). Might have to click it twice to get the right tool. (Do not trust the custom "DayZ cleanup tool", make sure you run the actual Steam verifier). Then follow the install instructions again.
+
+# Credits:
+
+**Arkensor** for hack options.
