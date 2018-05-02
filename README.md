@@ -76,4 +76,4 @@ You heard correct, beards are in this build! As of right now it takes 30 minutes
 
 # Credits:
 
-**Arkensor** for hack options.
+**Arkensor** for hack options: https://github.com/Arkensor/DayZCommunityOfflineMode
