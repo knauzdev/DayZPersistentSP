@@ -2,7 +2,7 @@
 Mod for the 0.63 Singleplayer mode that saves characters.
 
 Hello! 
-This is the updated, cleaner version of this mod: https://www.reddit.com/r/dayz/comments/8ftcs2/063_persistent_singleplayer_mod_update_10_save/
+Reddit Thread: https://www.reddit.com/r/dayz/comments/8ftcs2/063_persistent_singleplayer_mod_update_10_save/
 
 Everything related to saving characters has now been moved to the init.c file (instead of the independant scripts folder).
 It is now a lot cleaner to read and no need for thousands of lines of code in the scritps folder that the Mission script module dependend on.
