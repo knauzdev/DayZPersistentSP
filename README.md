@@ -1,7 +1,8 @@
 # DayZPersistentSP
 Mod for the 0.63 Singleplayer mode that saves characters.
 
-Hello! 
+Hello!
+
 Reddit Thread: https://www.reddit.com/r/dayz/comments/8ftcs2/063_persistent_singleplayer_mod_update_10_save/
 
 Everything related to saving characters has now been moved to the init.c file (instead of the independant scripts folder).
